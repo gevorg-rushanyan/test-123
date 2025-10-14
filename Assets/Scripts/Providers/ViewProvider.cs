@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Containers;
 using UI.MainMenu;
+using UI.MatchCards;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -18,7 +19,8 @@ namespace Providers
             _viewContainer = Resources.Load<ViewContainer>(Path);
             _viewsMapping = new Dictionary<Type, Object>()
             {
-                {typeof(MainMenuView), _viewContainer.MainMenu}
+                {typeof(MainMenuView), _viewContainer.MainMenu},
+                {typeof(MatchCardsView), _viewContainer.MatchCards}
             };
         }
 

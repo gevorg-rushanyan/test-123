@@ -1,5 +1,6 @@
 using Providers;
 using UI.MainMenu;
+using UI.MatchCards;
 using UnityEngine;
 
 namespace UI
@@ -37,7 +38,10 @@ namespace UI
                     return _viewController as T;
                     
                 case ViewType.MatchCards:
-                    break;
+                    var matchCardsView = _viewProvider.GetView<MatchCardsView>();
+                    _viewController = new MatchCardsController(matchCardsView, _viewContainer);
+                    _viewController.Show();
+                    return _viewController as T;
             }
 
             return null;

@@ -38,7 +38,7 @@ namespace Core.GameStates
         {
             _gameState?.End();
             var matchCardsState = new MatchCardsState(_uiManager);
-            
+            matchCardsState.OnBackSelected += StartMainMenuState;
             _gameState = matchCardsState;
             _gameState.Start();
         }

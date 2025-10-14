@@ -1,4 +1,5 @@
 using UI.MainMenu;
+using UI.MatchCards;
 using UnityEngine;
 
 namespace Containers
@@ -7,7 +8,9 @@ namespace Containers
     public class ViewContainer : ScriptableObject
     {
         [SerializeField] private MainMenuView _mainMenu;
+        [SerializeField] private MatchCardsView _matchCards;
         
         public MainMenuView MainMenu => _mainMenu;
+        public MatchCardsView MatchCards => _matchCards;
     }
 }
