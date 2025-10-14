@@ -18,7 +18,7 @@ namespace Core
         {
             _uiManager.gameObject.SetActive(true);
             
-            _gameStateController = new GameStateController();
+            _gameStateController = new GameStateController(_uiManager);
             _gameStateController.SetState(GameState.MainMenu);
             
             _uiManager.gameObject.SetActive(false);

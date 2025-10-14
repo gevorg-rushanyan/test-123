@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UI
 {
-    public class UiManager : MonoBehaviour
+    public class UiManager : MonoBehaviour, IUiManager
     {
         [SerializeField] private GameObject _loadingView;
         private void Start()
@@ -18,6 +18,11 @@ namespace UI
             }
             
             _loadingView.SetActive(state);
+        }
+
+        public void ShowView()
+        {
+            
         }
     }
 }

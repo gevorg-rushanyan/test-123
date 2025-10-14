@@ -1,9 +1,17 @@
+using UI;
+
 namespace Core.GameStates
 {
     public class GameStateController : IGameStateController
     {
+        private readonly IUiManager _uiManager;
         private IGameState _gameState;
-        
+
+        public GameStateController(IUiManager uiManager)
+        {
+            _uiManager = uiManager;
+        }
+
         public void SetState(GameState state)
         {
             switch (state)
