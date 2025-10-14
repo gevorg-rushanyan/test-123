@@ -11,6 +11,7 @@ namespace Core
         private GameStateController _gameStateController;
         private IViewProvider _viewProvider;
         private IBoardConfigProvider _boardConfigProvider;
+        private ICommonResourceProvider _commonResourceProvider;
         
         private void Start()
         {
@@ -23,9 +24,11 @@ namespace Core
             
             _viewProvider = new ViewProvider();
             _boardConfigProvider = new BoardConfigProvider();
+            _commonResourceProvider = new CommonResourceProvider();
             
             _viewProvider.Initialize();
             _boardConfigProvider.Initialize();
+            _commonResourceProvider.Initialize();
             _uiManager.Initialize(_viewProvider);
             
             _gameStateController = new GameStateController(_uiManager, _boardConfigProvider);
