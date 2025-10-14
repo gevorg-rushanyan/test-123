@@ -10,6 +10,7 @@ namespace Core
         [SerializeField] private UiManager _uiManager;
         private GameStateController _gameStateController;
         private IViewProvider _viewProvider;
+        private IBoardDataProvider _boardDataProvider;
         
         private void Start()
         {
@@ -21,7 +22,10 @@ namespace Core
             _uiManager.SetLoadingState(true);
             
             _viewProvider = new ViewProvider();
+            _boardDataProvider = new BoardDataProvider();
+            
             _viewProvider.Initialize();
+            _boardDataProvider.Initialize();
             _uiManager.Initialize(_viewProvider);
             
             _gameStateController = new GameStateController(_uiManager);
