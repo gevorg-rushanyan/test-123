@@ -7,5 +7,6 @@ namespace Providers
     {
         void Initialize();
         bool TryGetBoardItemSprite(ItemType type, out Sprite sprite);
+        Sprite GetSprite(string name);
     }
 }

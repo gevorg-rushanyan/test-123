@@ -24,6 +24,11 @@ namespace Providers
             return result != null;
         }
 
+        public Sprite GetSprite(string name)
+        {
+            return _commonResourceContainer.BoardAtlas.GetSprite(name);
+        }
+
         private string ItemTypeToString(ItemType type)
         {
             return type switch

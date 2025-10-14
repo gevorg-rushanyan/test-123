@@ -9,6 +9,7 @@ namespace BoardModule
 {
     public class BoardController : MonoBehaviour
     {
+        private const string CoverImageName = "Cover";
         [SerializeField] private RectTransform _container;
         [SerializeField] private GridLayoutGroup _gridLayout;
         [SerializeField] private BoardItem _cardPrefab;
@@ -25,6 +26,7 @@ namespace BoardModule
         {
             _resourceProvider = commonResourceProvider;
             GenerateGrid(columns, rows, itemsMapping);
+            StartCoroutine(PlayStartAnimation());
         }
 
         private void GenerateGrid(int columns, int rows, IReadOnlyDictionary<Vector2Int, BoardItemData> itemsMapping)
@@ -33,13 +35,14 @@ namespace BoardModule
 
             _gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
             _gridLayout.constraintCount = columns;
+            var coverImage = _resourceProvider.GetSprite(CoverImageName);
 
             for (int i = 0; i < columns; ++i)
             {
                 for (int j = 0; j < rows; j++)
                 {
                     var key = new Vector2Int(i, j);
-                    var item = CreateItem(key, itemsMapping);
+                    var item = CreateItem(key, itemsMapping, coverImage);
                     if (!_items.TryAdd(key, item))
                     {
                         Debug.LogError($"Duplicate Key x: {key.x} y: {key.y}");
@@ -49,13 +52,13 @@ namespace BoardModule
             StartCoroutine(UpdateCellSizeCoroutine(columns, rows));
         }
 
-        private BoardItem CreateItem(Vector2Int key, IReadOnlyDictionary<Vector2Int, BoardItemData> itemsMapping)
+        private BoardItem CreateItem(Vector2Int key, IReadOnlyDictionary<Vector2Int, BoardItemData> itemsMapping, Sprite coverImage = null)
         {
             var item = Instantiate(_cardPrefab, _gridLayout.transform);
             if (itemsMapping.TryGetValue(key, out var itemData))
             {
                 _resourceProvider.TryGetBoardItemSprite(itemData.Type, out Sprite sprite);
-                item.Initialize(key, sprite);
+                item.Initialize(itemData.Type, key, sprite, coverImage);
             }
             else
             {
@@ -65,6 +68,15 @@ namespace BoardModule
             item.OnClick += OnItemClicked;
 
             return item;
+        }
+
+        private IEnumerator PlayStartAnimation()
+        {
+            yield return new WaitForSeconds(1.5f);
+            foreach (var itemData in _items.Values)
+            {
+                itemData.Hide();
+            }
         }
 
         private void OnItemClicked(Vector2Int key)

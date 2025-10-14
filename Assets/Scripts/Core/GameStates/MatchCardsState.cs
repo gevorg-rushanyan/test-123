@@ -26,7 +26,7 @@ namespace Core.GameStates
 
         public void Start()
         {
-            var data = _boardConfigProvider.GetBoardConfig(0);
+            var data = _boardConfigProvider.GetBoardConfig(1);
             int columns = data.Columns;
             int rows = data.Rows;
             var mapping = data.GetMapping();
