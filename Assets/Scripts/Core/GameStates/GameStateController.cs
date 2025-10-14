@@ -28,7 +28,9 @@ namespace Core.GameStates
         private void StartMainMenuState()
         {
             _gameState?.End();
-            _gameState = new MainMenuState(_uiManager);
+            var mainMenuState = new MainMenuState(_uiManager);
+            mainMenuState.OnPlaySelected += StartCardMatchState;
+            _gameState = mainMenuState;
             _gameState.Start();
         }
         

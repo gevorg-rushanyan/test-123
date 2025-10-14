@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace UI.MainMenu
@@ -6,6 +7,8 @@ namespace UI.MainMenu
     {
         private MainMenuView _viewPrefab;
         
+        public Action OnClickPlay;
+        
         public MainMenuController(MainMenuView viewPrefab, Transform root) : base(root)
         {
             _viewPrefab = viewPrefab;
@@ -13,7 +16,8 @@ namespace UI.MainMenu
 
         public override void Show()
         {
-            var view = base.Show(_viewPrefab);    
+            var view = base.Show(_viewPrefab);
+            view.OnClickPlay += () => { OnClickPlay?.Invoke(); };
         }
     }
 }
