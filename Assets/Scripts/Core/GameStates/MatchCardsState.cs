@@ -8,20 +8,20 @@ namespace Core.GameStates
     public class MatchCardsState : IGameState
     {
         private readonly IUiManager _uiManager;
-        private readonly IBoardDataProvider _boardDataProvider;
+        private readonly IBoardConfigProvider _boardConfigProvider;
         private MatchCardsController _matchCardsController;
         
         public Action OnBackSelected;
         
-        public MatchCardsState(IUiManager uiManager, IBoardDataProvider boardDataProvider)
+        public MatchCardsState(IUiManager uiManager, IBoardConfigProvider boardConfigProvider)
         {
             _uiManager = uiManager;
-            _boardDataProvider = boardDataProvider;
+            _boardConfigProvider = boardConfigProvider;
         }
 
         public void Start()
         {
-            var data = _boardDataProvider.GetBoardData(0);
+            var data = _boardConfigProvider.GetBoardConfig(0);
             int columns = data.Columns;
             int rows = data.Rows;
             var mapping = data.GetMapping();

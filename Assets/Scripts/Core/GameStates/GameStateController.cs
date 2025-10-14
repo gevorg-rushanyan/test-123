@@ -6,13 +6,13 @@ namespace Core.GameStates
     public class GameStateController : IGameStateController
     {
         private readonly IUiManager _uiManager;
-        private readonly IBoardDataProvider _boardDataProvider;
+        private readonly IBoardConfigProvider _boardConfigProvider;
         private IGameState _gameState;
 
-        public GameStateController(IUiManager uiManager, IBoardDataProvider boardDataProvider)
+        public GameStateController(IUiManager uiManager, IBoardConfigProvider boardConfigProvider)
         {
             _uiManager = uiManager;
-            _boardDataProvider = boardDataProvider;
+            _boardConfigProvider = boardConfigProvider;
         }
 
         public void SetState(GameState state)
@@ -40,7 +40,7 @@ namespace Core.GameStates
         private void StartCardMatchState()
         {
             _gameState?.End();
-            var matchCardsState = new MatchCardsState(_uiManager, _boardDataProvider);
+            var matchCardsState = new MatchCardsState(_uiManager, _boardConfigProvider);
             matchCardsState.OnBackSelected += StartMainMenuState;
             _gameState = matchCardsState;
             _gameState.Start();
