@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Board;
+using Providers;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,12 +13,17 @@ namespace BoardModule
         [SerializeField] private GridLayoutGroup _gridLayout;
         [SerializeField] private BoardItem _cardPrefab;
         [SerializeField] private Vector2 _spacing = new Vector2(10, 10);
-        
-        // private readonly List<BoardItem> _items = new ();
+
+        private ICommonResourceProvider _resourceProvider;
         private Dictionary<Vector2Int, BoardItem> _items = new ();
 
-        public void Initialize(int columns, int rows, IReadOnlyDictionary<Vector2Int, BoardItemData> itemsMapping)
+        public void Initialize(
+            int columns,
+            int rows,
+            IReadOnlyDictionary<Vector2Int, BoardItemData> itemsMapping,
+            ICommonResourceProvider commonResourceProvider)
         {
+            _resourceProvider = commonResourceProvider;
             GenerateGrid(columns, rows, itemsMapping);
         }
 
@@ -33,25 +39,32 @@ namespace BoardModule
                 for (int j = 0; j < rows; j++)
                 {
                     var key = new Vector2Int(i, j);
-                    var item = Instantiate(_cardPrefab, _gridLayout.transform);
-                    if (itemsMapping.TryGetValue(key, out var itemData))
-                    {
-                        item.Initialize(key, null);
-                    }
-                    else
-                    {
-                        item.Initialize();
-                    }
-                    item.gameObject.SetActive(true);
-                    item.OnClick += OnItemClicked;
-
+                    var item = CreateItem(key, itemsMapping);
                     if (!_items.TryAdd(key, item))
                     {
-                        Debug.LogError($"Duplicate Key x: {i} y: {j}");
+                        Debug.LogError($"Duplicate Key x: {key.x} y: {key.y}");
                     }
                 }
             }
             StartCoroutine(UpdateCellSizeCoroutine(columns, rows));
+        }
+
+        private BoardItem CreateItem(Vector2Int key, IReadOnlyDictionary<Vector2Int, BoardItemData> itemsMapping)
+        {
+            var item = Instantiate(_cardPrefab, _gridLayout.transform);
+            if (itemsMapping.TryGetValue(key, out var itemData))
+            {
+                _resourceProvider.TryGetBoardItemSprite(itemData.Type, out Sprite sprite);
+                item.Initialize(key, sprite);
+            }
+            else
+            {
+                item.Initialize();
+            }
+            item.gameObject.SetActive(true);
+            item.OnClick += OnItemClicked;
+
+            return item;
         }
 
         private void OnItemClicked(Vector2Int key)
