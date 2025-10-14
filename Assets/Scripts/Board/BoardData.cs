@@ -13,5 +13,21 @@ namespace Board
         public int Columns => _columns;
         public int Rows => _rows;
         public IReadOnlyList<BoardItemData> Items => _items;
+
+        public Dictionary<Vector2Int, BoardItemData> GetMapping()
+        {
+            var map = new Dictionary<Vector2Int, BoardItemData>();
+            if (_items == null || _items.Count == 0)
+            {
+                return map;
+            }
+
+            foreach (var item in _items)
+            {
+                map.Add(item.Position, item);
+            }
+            
+            return map;
+        }
     }
 }

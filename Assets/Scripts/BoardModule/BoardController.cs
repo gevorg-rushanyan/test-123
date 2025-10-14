@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Board;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,29 +13,51 @@ namespace BoardModule
         [SerializeField] private BoardItem _cardPrefab;
         [SerializeField] private Vector2 _spacing = new Vector2(10, 10);
         
-        private readonly List<BoardItem> _items = new ();
+        // private readonly List<BoardItem> _items = new ();
+        private Dictionary<Vector2Int, BoardItem> _items = new ();
 
-        public void Initialize(int columns, int rows)
+        public void Initialize(int columns, int rows, IReadOnlyDictionary<Vector2Int, BoardItemData> itemsMapping)
         {
-            GenerateGrid(columns, rows);
+            GenerateGrid(columns, rows, itemsMapping);
         }
 
-        private void GenerateGrid(int columns, int rows)
+        private void GenerateGrid(int columns, int rows, IReadOnlyDictionary<Vector2Int, BoardItemData> itemsMapping)
         {
             DeleteItems();
 
             _gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
             _gridLayout.constraintCount = columns;
 
-            for (int i = 0; i < rows * columns; i++)
+            for (int i = 0; i < columns; ++i)
             {
-                var item = Instantiate(_cardPrefab, _gridLayout.transform);
-                item.gameObject.SetActive(true);
-                _items.Add(item);
+                for (int j = 0; j < rows; j++)
+                {
+                    var key = new Vector2Int(i, j);
+                    var item = Instantiate(_cardPrefab, _gridLayout.transform);
+                    if (itemsMapping.TryGetValue(key, out var itemData))
+                    {
+                        item.Initialize(key, null);
+                    }
+                    else
+                    {
+                        item.Initialize();
+                    }
+                    item.gameObject.SetActive(true);
+                    item.OnClick += OnItemClicked;
+
+                    if (!_items.TryAdd(key, item))
+                    {
+                        Debug.LogError($"Duplicate Key x: {i} y: {j}");
+                    }
+                }
             }
             StartCoroutine(UpdateCellSizeCoroutine(columns, rows));
         }
-        
+
+        private void OnItemClicked(Vector2Int key)
+        {
+        }
+
         private IEnumerator UpdateCellSizeCoroutine(int columns, int rows)
         {
             yield return null;
@@ -58,7 +81,7 @@ namespace BoardModule
         {
             foreach (var item in _items)
             {
-                Destroy(item.gameObject);
+                Destroy(item.Value.gameObject);
             }
             _items.Clear();
         }

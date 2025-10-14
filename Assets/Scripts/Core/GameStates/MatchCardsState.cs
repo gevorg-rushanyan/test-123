@@ -24,9 +24,10 @@ namespace Core.GameStates
             var data = _boardDataProvider.GetBoardData(0);
             int columns = data.Columns;
             int rows = data.Rows;
+            var mapping = data.GetMapping();
             
             _matchCardsController = _uiManager.ShowView<MatchCardsController>(ViewType.MatchCards);
-            _matchCardsController.BoardController.Initialize(columns, rows);
+            _matchCardsController.BoardController.Initialize(columns, rows, mapping);
             _matchCardsController.OnClickBack += OnClickBack;
         }
 

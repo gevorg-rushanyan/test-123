@@ -23,6 +23,12 @@ namespace BoardModule
             _coverImage.gameObject.SetActive(true);
         }
 
+        public void Initialize()
+        {
+            _itemImage.gameObject.SetActive(false);
+            _coverImage.gameObject.SetActive(false);
+        }
+
         private void OnClicked()
         {
             _itemImage.gameObject.SetActive(true);
