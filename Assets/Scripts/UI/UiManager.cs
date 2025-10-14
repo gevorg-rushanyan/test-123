@@ -1,3 +1,5 @@
+using Providers;
+using UI.MainMenu;
 using UnityEngine;
 
 namespace UI
@@ -5,6 +7,14 @@ namespace UI
     public class UiManager : MonoBehaviour, IUiManager
     {
         [SerializeField] private GameObject _loadingView;
+        [SerializeField] private Transform _viewContainer;
+        private IViewProvider _viewProvider;
+        private BaseViewController _viewController;
+
+        public void Initialize(IViewProvider viewProvider)
+        {
+            _viewProvider = viewProvider;
+        }
 
         public void SetLoadingState(bool state)
         {
@@ -16,9 +26,21 @@ namespace UI
             _loadingView.SetActive(state);
         }
 
-        public void ShowView()
+        public T ShowView<T>(ViewType viewType) where T : BaseViewController
         {
-            
+            switch (viewType)
+            {
+                case ViewType.MainMenu:
+                    var mainMenuView = _viewProvider.GetView<MainMenuView>();
+                    _viewController = new MainMenuController(mainMenuView, _viewContainer);
+                    _viewController.Show();
+                    return _viewController as T;
+                    
+                case ViewType.MatchCards:
+                    break;
+            }
+
+            return null;
         }
     }
 }

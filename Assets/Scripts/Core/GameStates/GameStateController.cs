@@ -28,7 +28,7 @@ namespace Core.GameStates
         private void StartMainMenuState()
         {
             _gameState?.End();
-            _gameState = new MainMenuState();
+            _gameState = new MainMenuState(_uiManager);
             _gameState.Start();
         }
         

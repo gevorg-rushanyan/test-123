@@ -1,8 +1,17 @@
+using Providers;
+
 namespace UI
 {
+    public enum ViewType
+    {
+        MainMenu,
+        MatchCards
+    }
+    
     public interface IUiManager
     {
-        void ShowView();
+        void Initialize(IViewProvider viewProvider);
+        T ShowView<T>(ViewType viewType) where T : BaseViewController;
         void SetLoadingState(bool state);
     }
 }

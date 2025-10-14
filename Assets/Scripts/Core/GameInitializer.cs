@@ -1,4 +1,5 @@
 using Core.GameStates;
+using Providers;
 using UI;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ namespace Core
     {
         [SerializeField] private UiManager _uiManager;
         private GameStateController _gameStateController;
+        private IViewProvider _viewProvider;
         
         private void Start()
         {
@@ -16,12 +18,16 @@ namespace Core
 
         private void Initialize()
         {
-            _uiManager.gameObject.SetActive(true);
+            _uiManager.SetLoadingState(true);
+            
+            _viewProvider = new ViewProvider();
+            _viewProvider.Initialize();
+            _uiManager.Initialize(_viewProvider);
             
             _gameStateController = new GameStateController(_uiManager);
             _gameStateController.SetState(GameState.MainMenu);
             
-            _uiManager.gameObject.SetActive(false);
+            _uiManager.SetLoadingState(false);
         }
     }
 }
