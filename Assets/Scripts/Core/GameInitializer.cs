@@ -28,7 +28,7 @@ namespace Core
             _boardDataProvider.Initialize();
             _uiManager.Initialize(_viewProvider);
             
-            _gameStateController = new GameStateController(_uiManager);
+            _gameStateController = new GameStateController(_uiManager, _boardDataProvider);
             _gameStateController.SetState(GameState.MainMenu);
             
             _uiManager.SetLoadingState(false);

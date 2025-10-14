@@ -9,10 +9,15 @@ namespace BoardModule
     {
         [SerializeField] private RectTransform _container;
         [SerializeField] private GridLayoutGroup _gridLayout;
-        [SerializeField] private GameObject _cardPrefab;
+        [SerializeField] private BoardItem _cardPrefab;
         [SerializeField] private Vector2 _spacing = new Vector2(10, 10);
         
-        private readonly List<GameObject> _items = new ();
+        private readonly List<BoardItem> _items = new ();
+
+        public void Initialize(int columns, int rows)
+        {
+            GenerateGrid(columns, rows);
+        }
 
         private void GenerateGrid(int columns, int rows)
         {
@@ -29,8 +34,7 @@ namespace BoardModule
             }
             StartCoroutine(UpdateCellSizeCoroutine(columns, rows));
         }
-
-
+        
         private IEnumerator UpdateCellSizeCoroutine(int columns, int rows)
         {
             yield return null;
@@ -54,7 +58,7 @@ namespace BoardModule
         {
             foreach (var item in _items)
             {
-                Destroy(item);
+                Destroy(item.gameObject);
             }
             _items.Clear();
         }

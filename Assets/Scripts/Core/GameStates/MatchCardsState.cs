@@ -1,4 +1,5 @@
 using System;
+using Providers;
 using UI;
 using UI.MatchCards;
 
@@ -7,18 +8,25 @@ namespace Core.GameStates
     public class MatchCardsState : IGameState
     {
         private readonly IUiManager _uiManager;
+        private readonly IBoardDataProvider _boardDataProvider;
         private MatchCardsController _matchCardsController;
         
         public Action OnBackSelected;
         
-        public MatchCardsState(IUiManager uiManager)
+        public MatchCardsState(IUiManager uiManager, IBoardDataProvider boardDataProvider)
         {
             _uiManager = uiManager;
+            _boardDataProvider = boardDataProvider;
         }
 
         public void Start()
         {
+            var data = _boardDataProvider.GetBoardData(0);
+            int columns = data.Width;
+            int rows = data.Height;
+            
             _matchCardsController = _uiManager.ShowView<MatchCardsController>(ViewType.MatchCards);
+            _matchCardsController.BoardController.Initialize(columns, rows);
             _matchCardsController.OnClickBack += OnClickBack;
         }
 
