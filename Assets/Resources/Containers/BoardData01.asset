@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d370633539af40a9ba36175e100857f7, type: 3}
   m_Name: BoardData01
   m_EditorClassIdentifier: 
-  _width: 4
-  _height: 4
+  _columns: 4
+  _rows: 4
   _items:
   - _position: {x: 0, y: 0}
     _type: 1

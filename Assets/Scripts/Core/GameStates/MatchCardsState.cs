@@ -22,8 +22,8 @@ namespace Core.GameStates
         public void Start()
         {
             var data = _boardDataProvider.GetBoardData(0);
-            int columns = data.Width;
-            int rows = data.Height;
+            int columns = data.Columns;
+            int rows = data.Rows;
             
             _matchCardsController = _uiManager.ShowView<MatchCardsController>(ViewType.MatchCards);
             _matchCardsController.BoardController.Initialize(columns, rows);

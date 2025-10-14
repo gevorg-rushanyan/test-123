@@ -6,12 +6,12 @@ namespace Board
     [CreateAssetMenu(fileName = "BoardData", menuName = "ScriptableObjects/BoardData")]
     public class BoardData : ScriptableObject
     {
-        [SerializeField] [Min(2)] private int _width = 2;
-        [SerializeField] [Min(2)] private int _height = 2;
+        [SerializeField] [Min(2)] private int _columns = 2;
+        [SerializeField] [Min(2)] private int _rows = 2;
         [SerializeField] private List<BoardItemData> _items;
         
-        public int Width => _width;
-        public int Height => _height;
+        public int Columns => _columns;
+        public int Rows => _rows;
         public IReadOnlyList<BoardItemData> Items => _items;
     }
 }
