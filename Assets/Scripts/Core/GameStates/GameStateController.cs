@@ -36,6 +36,11 @@ namespace Core.GameStates
         
         private void StartCardMatchState()
         {
+            _gameState?.End();
+            var matchCardsState = new MatchCardsState(_uiManager);
+            
+            _gameState = matchCardsState;
+            _gameState.Start();
         }
     }
 }

@@ -25,6 +25,7 @@ namespace Core.GameStates
         public void End()
         {
             _mainMenuController.OnClickPlay -= OnClickPlay;
+            _uiManager.HideView(_mainMenuController);
         }
 
         private void OnClickPlay()

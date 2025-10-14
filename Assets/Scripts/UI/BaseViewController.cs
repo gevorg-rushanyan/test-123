@@ -22,7 +22,7 @@ namespace UI
             return view;
         }
 
-        public void Hide()
+        public virtual void Hide()
         {
             Object.Destroy(_viewGameObject);
         }

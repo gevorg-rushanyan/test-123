@@ -42,5 +42,10 @@ namespace UI
 
             return null;
         }
+        
+        public void HideView(BaseViewController viewController)
+        {
+            viewController?.Hide();
+        }
     }
 }

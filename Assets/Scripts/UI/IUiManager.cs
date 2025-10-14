@@ -12,6 +12,7 @@ namespace UI
     {
         void Initialize(IViewProvider viewProvider);
         T ShowView<T>(ViewType viewType) where T : BaseViewController;
+        void HideView(BaseViewController viewController);
         void SetLoadingState(bool state);
     }
 }
