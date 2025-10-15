@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Board;
+using Containers;
 
 namespace Providers
 {
@@ -6,5 +8,6 @@ namespace Providers
     {
         void Initialize();
         BoardData GetBoardConfig(int index);
+        IReadOnlyList<MatchCombo> MatchComboConfig { get; }
     }
 }

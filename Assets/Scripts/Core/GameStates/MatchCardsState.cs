@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Board;
+using Containers;
 using Core.Progress;
 using Providers;
 using UI;
@@ -18,6 +19,9 @@ namespace Core.GameStates
         private MatchCardsController _matchCardsController;
         private int _targetMatchCount;
         private int _maxTurnCount;
+        private IReadOnlyList<MatchCombo> _matchCombos;
+        private int _continuesMatchCount;
+        private int _scoreMultiplier;
         
         public Action OnBackSelected;
         
@@ -37,6 +41,7 @@ namespace Core.GameStates
         {
             int level = _progressService.Level;
             var boardData = _boardConfigProvider.GetBoardConfig(level);
+            _matchCombos = _boardConfigProvider.MatchComboConfig;
             _maxTurnCount = boardData.MaxTurnCount;
             _targetMatchCount = boardData.TargetMatchCount;
             int columns = boardData.Columns;
@@ -60,15 +65,19 @@ namespace Core.GameStates
                 _matchCardsController.OnWinOrLoseClick += OnWinOrLoseClick;
             }
             
+            _scoreMultiplier = GetScoreMultiplier(_continuesMatchCount);
             _matchCardsController.BoardController.Initialize(columns, rows, boardItems, _spriteProvider);
-            _matchCardsController.UpdateProgress(_progressService.Matches, _progressService.Turns);
+            _matchCardsController.UpdateProgress(_progressService.Matches, _progressService.Turns, _progressService.Score, _scoreMultiplier);
         }
 
         private void OnMatched(List<Vector2Int> matchItems)
         {
+            ++_continuesMatchCount;
+            _scoreMultiplier = GetScoreMultiplier(_continuesMatchCount);
+            
             _progressService.AddMatchItems(matchItems);
-            _progressService.UpdateTurnsAndMatches(1, 1);
-            _matchCardsController.UpdateProgress(_progressService.Matches, _progressService.Turns);
+            _progressService.UpdateTurnsAndMatches(1, 1, 1 * _scoreMultiplier);
+            _matchCardsController.UpdateProgress(_progressService.Matches, _progressService.Turns, _progressService.Score, _scoreMultiplier);
             if (_progressService.Matches >= _targetMatchCount)
             {
                 _matchCardsController.ShowWinOrLoseView(true);
@@ -78,8 +87,10 @@ namespace Core.GameStates
 
         private void OnMatchFail()
         {
-            _progressService.UpdateTurnsAndMatches(1, 0);
-            _matchCardsController.UpdateProgress(_progressService.Matches, _progressService.Turns);
+            _continuesMatchCount = 0;
+            _scoreMultiplier = GetScoreMultiplier(_continuesMatchCount);
+            _progressService.UpdateTurnsAndMatches(1, 0, 0);
+            _matchCardsController.UpdateProgress(_progressService.Matches, _progressService.Turns, _progressService.Score, _scoreMultiplier);
             if (_progressService.Turns >= _maxTurnCount)
             {
                 _matchCardsController.ShowWinOrLoseView(false);
@@ -101,8 +112,25 @@ namespace Core.GameStates
 
         private void OnWinOrLoseClick()
         {
+            _continuesMatchCount = 0;
             _matchCardsController.HideWinOrLoseView();
             Start();
+        }
+
+        private int GetScoreMultiplier(int continuesMatchCount)
+        {
+            int multiplier = 1;
+
+            foreach (var combo in _matchCombos)
+            {
+                if (continuesMatchCount >= combo.MatchCount)
+                {
+                    multiplier = combo.Multiplier;
+                }
+            }
+            
+            return multiplier;
+            
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Board;
 using Containers;
 using UnityEngine;
@@ -8,6 +9,8 @@ namespace Providers
     {
         private const string Path = "Containers/BoardConfigContainer";
         private BoardConfigContainer _boardConfigContainer;
+        
+        public IReadOnlyList<MatchCombo> MatchComboConfig => _boardConfigContainer.MatchCombo;
         
         public void Initialize()
         {

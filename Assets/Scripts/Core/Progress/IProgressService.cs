@@ -13,7 +13,7 @@ namespace Core.Progress
         
         void Initialize();
         void AddMatchItems(List<Vector2Int> matches);
-        void UpdateTurnsAndMatches(int turnsDelta, int matchesDelta);
+        void UpdateTurnsAndMatches(int turnsDelta, int matchesDelta, int scoreDelta);
         void LevelPassed();
         void ResetProgress();
         void SaveProgress();

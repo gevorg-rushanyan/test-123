@@ -27,9 +27,9 @@ namespace UI.MatchCards
             _view.OnWinOrLoseClick += () => { OnWinOrLoseClick?.Invoke(); };
         }
 
-        public void UpdateProgress(int matches, int turns)
+        public void UpdateProgress(int matches, int turns, int score, int multiplier)
         {
-            _view.UpdateProgress(matches, turns);
+            _view.UpdateProgress(matches, turns, score, multiplier);
         }
 
         public void ShowWinOrLoseView(bool win)

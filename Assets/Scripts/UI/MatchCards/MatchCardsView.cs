@@ -12,6 +12,9 @@ namespace UI.MatchCards
         [SerializeField] private BoardController _boardController;
         [SerializeField] private TMP_Text _matchesCount;
         [SerializeField] private TMP_Text _turnsCount;
+        [SerializeField] private TMP_Text _scoreCount;
+        [SerializeField] private Transform _multiplierContainer;
+        [SerializeField] private TMP_Text _scoreMultiplier;
         [Header("Win or Lose")]
         [SerializeField] private GameObject _winOrLoseContainer;
         [SerializeField] private TMP_Text _winOrLoseText;
@@ -29,10 +32,23 @@ namespace UI.MatchCards
             _winOrLoseButton.onClick.AddListener(() => OnWinOrLoseClick?.Invoke());
         }
 
-        public void UpdateProgress(int matches, int turns)
+        public void UpdateProgress(int matches, int turns, int score, int multiplier)
         {
             _matchesCount.text = matches.ToString();
             _turnsCount.text = turns.ToString();
+            _scoreCount.text = score.ToString();
+            SetMultiplier(multiplier);
+        }
+
+        private void SetMultiplier(int multiplier)
+        {
+            if (multiplier <= 1)
+            {
+                _multiplierContainer.gameObject.SetActive(false);
+                return;
+            }
+            _multiplierContainer.gameObject.SetActive(true);
+            _scoreMultiplier.text = $"x{multiplier}";
         }
 
         public void ShowWinOrLoseView(bool win)

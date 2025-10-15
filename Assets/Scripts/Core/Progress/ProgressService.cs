@@ -17,15 +17,7 @@ namespace Core.Progress
         public int Level => _playerProgress.Level;
         public int Turns => _playerProgress.Turns;
         public int Matches => _playerProgress.Matches;
-        public int Score
-        {
-            get => _playerProgress.Score;
-            set
-            {
-                _playerProgress.Score = value;
-                _isModified = true;
-            }
-        }
+        public int Score => _playerProgress.Score;
         public IReadOnlyList<Vector2Int> MatchItems => _playerProgress.MatchItems;
 
         public void Initialize()
@@ -42,7 +34,7 @@ namespace Core.Progress
             }
         }
 
-        public void UpdateTurnsAndMatches(int turnsDelta, int matchesDelta)
+        public void UpdateTurnsAndMatches(int turnsDelta, int matchesDelta, int scoreDelta)
         {
             if (turnsDelta > 0)
             {
@@ -53,6 +45,12 @@ namespace Core.Progress
             if (matchesDelta > 0)
             {
                 _playerProgress.Matches += matchesDelta;
+                _isModified = true;
+            }
+
+            if (scoreDelta > 0)
+            {
+                _playerProgress.Score += scoreDelta;
                 _isModified = true;
             }
         }
@@ -66,6 +64,7 @@ namespace Core.Progress
 
         public void ResetProgress()
         {
+            _playerProgress.Score = 0;
             _playerProgress.Turns = 0;
             _playerProgress.Matches = 0;
             _playerProgress.MatchItems.Clear();
