@@ -28,9 +28,7 @@ namespace BoardModule
             _itemImage.sprite = itemImage;
             _coverImage.sprite = coverImage;
             _button.onClick.AddListener(OnClicked);
-            
-            _itemImage.gameObject.SetActive(true);
-            _coverImage.gameObject.SetActive(false);
+            Hide();
         }
 
         public void Initialize()
