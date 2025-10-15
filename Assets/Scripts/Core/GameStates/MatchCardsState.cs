@@ -36,19 +36,26 @@ namespace Core.GameStates
         public void Start()
         {
             int level = _progressService.Level;
+            var boardData = _boardConfigProvider.GetBoardConfig(level);
             // First play
             if (_progressService.Columns == 0 || _progressService.Rows == 0)
             {
-                var data = _boardConfigProvider.GetBoardConfig(level);
-                _progressService.InitializeProgress(data.Columns, data.Rows, data.GetMapping());
+                _progressService.InitializeProgress(boardData.Columns, boardData.Rows);
             }
             
             int columns = _progressService.Columns;
             int rows = _progressService.Rows;
-            var items = _progressService.GetBoardItems();
+            var boardItems = boardData.GetMapping();
+            foreach (var key in _progressService.MatchItems)
+            {
+                if (boardItems.TryGetValue(key, out var item))
+                {
+                    item.Type = ItemType.None;
+                }
+            }
             
             _matchCardsController = _uiManager.ShowView<MatchCardsController>(ViewType.MatchCards);
-            _matchCardsController.BoardController.Initialize(columns, rows, items, _spriteProvider);
+            _matchCardsController.BoardController.Initialize(columns, rows, boardItems, _spriteProvider);
             _matchCardsController.BoardController.OnItemsMatch += OnMatched;
             _matchCardsController.BoardController.OnMatchFail += OnMatchFail;
             _matchCardsController.OnClickBack += OnClickBack;
@@ -57,7 +64,7 @@ namespace Core.GameStates
 
         private void OnMatched(List<Vector2Int> matchItems)
         {
-            _progressService.UpdateBoardItemsType(matchItems, ItemType.None);
+            _progressService.AddMatchItems(matchItems);
             _progressService.UpdateTurnsAndMatches(1, 1);
             _matchCardsController.UpdateProgress(_progressService.Matches, _progressService.Turns);
         }

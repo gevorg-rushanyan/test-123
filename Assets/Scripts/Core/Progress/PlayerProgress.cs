@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Board;
+using UnityEngine;
 
 namespace Core.Progress
 {
@@ -9,7 +9,7 @@ namespace Core.Progress
     {
         public int Columns = 0;
         public int Rows = 0;
-        public Dictionary<string, ItemType> Items = new ();
+        public List<Vector2Int> MatchItems = new ();
     }
 
     [Serializable]

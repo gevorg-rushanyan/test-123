@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Board;
 using UnityEngine;
 
 namespace Core.Progress
@@ -12,14 +11,12 @@ namespace Core.Progress
         int Matches { get; }
         int Columns { get; }
         int Rows { get; }
+        IReadOnlyList<Vector2Int> MatchItems { get; }
         
         void Initialize();
-        void InitializeProgress(int column, int row, Dictionary<Vector2Int, BoardItemData> boardItems);
-        IReadOnlyDictionary<Vector2Int, BoardItemData> GetBoardItems();
-        void SetBoardItems(Dictionary<Vector2Int, BoardItemData> boardItems);
-        void UpdateBoardItemsType(List<Vector2Int> boardItems, ItemType targetType);
+        void InitializeProgress(int column, int row);
+        void AddMatchItems(List<Vector2Int> matches);
         void UpdateTurnsAndMatches(int turnsDelta, int matchesDelta);
-
         void SaveProgress();
     }
 }

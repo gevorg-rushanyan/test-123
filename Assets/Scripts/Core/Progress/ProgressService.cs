@@ -11,7 +11,6 @@ namespace Core.Progress
     public class ProgressService : IProgressService
     {
         private const string FileName = "progress.json";
-        private const char KeySeparator = '-';
         private PlayerProgress _playerProgress;
         private bool _isModified;
 
@@ -58,45 +57,35 @@ namespace Core.Progress
             }
         }
         
+        public IReadOnlyList<Vector2Int> MatchItems => _playerProgress.Board.MatchItems;
+
         public void Initialize()
         {
             _playerProgress = LoadProgress();
         }
         
-        public IReadOnlyDictionary<Vector2Int, BoardItemData> GetBoardItems()
-        {
-            Dictionary<Vector2Int, BoardItemData> items = new Dictionary<Vector2Int, BoardItemData>();
-            
-            foreach (var item in _playerProgress.Board.Items)
-            {
-                Vector2Int key = KeyFromString(item.Key);
-                items.Add(key, new BoardItemData { Position = key, Type = item.Value});
-            }
-            
-            return items;
-        }
-
-        public void SetBoardItems(Dictionary<Vector2Int, BoardItemData> boardItems)
+        public void InitializeProgress(int columns, int rows)
         {
             _isModified = true;
-            _playerProgress.Board.Items.Clear();
-            foreach (var item in boardItems)
+            if (_playerProgress.Board == null)
             {
-                var key = KeyToString(item.Key);
-                _playerProgress.Board.Items.Add(key, item.Value.Type);
+                _playerProgress.Board = new BoardProgress();
+                return;
             }
+
+            _playerProgress.Turns = 0;
+            _playerProgress.Matches = 0;
+            _playerProgress.Board.Columns = columns;
+            _playerProgress.Board.Rows = rows;
+            _playerProgress.Board.MatchItems.Clear();
         }
         
-        public void UpdateBoardItemsType(List<Vector2Int> items, ItemType targetType)
+        public void AddMatchItems(List<Vector2Int> items)
         {
             _isModified = true;
             foreach (var item in items)
             {
-                var key = KeyToString(item);
-                if (_playerProgress.Board.Items.ContainsKey(key))
-                {
-                    _playerProgress.Board.Items[key] = targetType;
-                }
+                _playerProgress.Board.MatchItems.Add(item);
             }
         }
 
@@ -113,22 +102,6 @@ namespace Core.Progress
                 _playerProgress.Matches += matchesDelta;
                 _isModified = true;
             }
-        }
-
-        public void InitializeProgress(int columns, int rows, Dictionary<Vector2Int, BoardItemData> board)
-        {
-            if (_playerProgress.Board == null)
-            {
-                _playerProgress.Board = new BoardProgress();
-            }
-
-            _playerProgress.Turns = 0;
-            _playerProgress.Matches = 0;
-            _playerProgress.Board.Columns = columns;
-            _playerProgress.Board.Rows = rows;
-            
-            SetBoardItems(board);
-            _isModified = true;
         }
 
         public void SaveProgress()
@@ -176,22 +149,6 @@ namespace Core.Progress
                 Debug.LogError($"Failed to load progress: {e}");
                 return new PlayerProgress();
             }
-        }
-
-        private string KeyToString(Vector2Int key)
-        {
-            return $"{key.x}{KeySeparator}{key.y}";
-        }
-
-        private Vector2Int KeyFromString(string key)
-        {
-            var result = key.Split(KeySeparator);
-            if (result.Length != 2)
-            {
-                Debug.LogError($"ProgressService Can't parse key {key}");
-                return Vector2Int.zero;
-            }
-            return new Vector2Int(int.Parse(result[0]), int.Parse(result[1]));
         }
     }
 }
