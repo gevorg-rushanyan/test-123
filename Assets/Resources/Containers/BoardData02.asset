@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _columns: 4
   _rows: 4
+  _targetMatchCount: 6
+  _maxTurnCount: 9
   _items:
   - _position: {x: 0, y: 0}
     _type: 1

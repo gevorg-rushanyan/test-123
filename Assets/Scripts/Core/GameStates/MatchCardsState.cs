@@ -16,6 +16,8 @@ namespace Core.GameStates
         private readonly IBoardConfigProvider _boardConfigProvider;
         private readonly ISpriteProvider _spriteProvider;
         private MatchCardsController _matchCardsController;
+        private int _targetMatchCount;
+        private int _maxTurnCount;
         
         public Action OnBackSelected;
         
