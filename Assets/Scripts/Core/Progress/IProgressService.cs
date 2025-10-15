@@ -12,8 +12,9 @@ namespace Core.Progress
         int Rows { get; }
         
         void Initialize();
-        void UpdateBoardData(int column, int row, Dictionary<Vector2Int, BoardItemData> boardItems);
+        void SetBoardData(int column, int row, Dictionary<Vector2Int, BoardItemData> boardItems);
         IReadOnlyDictionary<Vector2Int, BoardItemData> GetBoardItems();
         void SetBoardItems(Dictionary<Vector2Int, BoardItemData> boardItems);
+        void UpdateBoardItemsType(List<Vector2Int> boardItems, ItemType targetType);
     }
 }

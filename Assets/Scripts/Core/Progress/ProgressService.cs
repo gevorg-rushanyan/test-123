@@ -65,23 +65,29 @@ namespace Core.Progress
             }
         }
         
-        public void UpdateBoardData(int columns, int rows, Dictionary<Vector2Int, BoardItemData> board)
+        public void UpdateBoardItemsType(List<Vector2Int> items, ItemType targetType)
         {
-            Dictionary<string, ItemType> boardData = new Dictionary<string, ItemType>();
-            foreach (var item in board)
+            foreach (var item in items)
             {
-                var key = KeyToString(item.Key);
-                boardData.Add(key, item.Value.Type);
+                var key = KeyToString(item);
+                if (_playerProgress.Board.Items.ContainsKey(key))
+                {
+                    _playerProgress.Board.Items[key] = targetType;
+                }
             }
+            SaveProgress();
+        }
 
+        public void SetBoardData(int columns, int rows, Dictionary<Vector2Int, BoardItemData> board)
+        {
             if (_playerProgress.Board == null)
             {
                 _playerProgress.Board = new BoardProgress();
             }
             _playerProgress.Board.Columns = columns;
             _playerProgress.Board.Rows = rows;
-            _playerProgress.Board.Items = boardData;
             
+            SetBoardItems(board);
             SaveProgress();
         }
 

@@ -23,7 +23,7 @@ namespace BoardModule
         private IReadOnlyDictionary<Vector2Int, BoardItemData> _items;
         private bool _isMatchCoroutineRunning;
 
-        public Action Trigger;
+        public Action<List<Vector2Int>> OnItemsMatch;
         
         public void Initialize(int columns, int rows, IReadOnlyDictionary<Vector2Int, BoardItemData> itemsMapping, ISpriteProvider spriteProvider)
         {
@@ -104,7 +104,7 @@ namespace BoardModule
                 }
             }
             _gridController.MarkAsMatched(items);
-            Trigger?.Invoke();
+            OnItemsMatch?.Invoke(items);
         }
     }
 }
