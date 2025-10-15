@@ -11,7 +11,7 @@ namespace BoardModule
 {
     public class GridController : IGridController
     {
-        private readonly Dictionary<Vector2Int, BoardItem> _items;
+        private readonly Dictionary<PositionInt, BoardItem> _items;
         private RectTransform _container;
         private GridLayoutGroup _gridLayout;
         private BoardItem _cardPrefab;
@@ -20,20 +20,19 @@ namespace BoardModule
         private int _columns;
         private int _rows;
         
-        public Action<Vector2Int> OnItemSelected { get; set; }
+        public Action<PositionInt> OnItemSelected { get; set; }
 
         public GridController(RectTransform container, GridLayoutGroup gridLayout, BoardItem cardPrefab, Vector2 spacing)
         {
-            _items = new Dictionary<Vector2Int, BoardItem>();
+            _items = new Dictionary<PositionInt, BoardItem>();
             
             _container = container;
             _gridLayout = gridLayout;
             _cardPrefab = cardPrefab;
             _spacing = spacing;
-            
         }
 
-        public void GenerateGrid(int columns, int rows, IReadOnlyDictionary<Vector2Int, BoardItemData> itemsMapping, string coverImageName, ISpriteProvider spriteProvider)
+        public void GenerateGrid(int columns, int rows, IReadOnlyDictionary<PositionInt, BoardItemData> itemsMapping, string coverImageName, ISpriteProvider spriteProvider)
         {
             _columns = columns;
             _rows = rows;
@@ -48,17 +47,17 @@ namespace BoardModule
             {
                 for (int j = 0; j < rows; ++j)
                 {
-                    var key = new Vector2Int(i, j);
+                    var key = new PositionInt(i, j);
                     var item = CreateItem(key, itemsMapping, coverImage);
                     if (!_items.TryAdd(key, item))
                     {
-                        Debug.LogError($"Duplicate Key x: {key.x} y: {key.y}");
+                        Debug.LogError($"Duplicate Key x: {key.X} y: {key.Y}");
                     }
                 }
             }
         }
         
-        private BoardItem CreateItem(Vector2Int key, IReadOnlyDictionary<Vector2Int, BoardItemData> itemsMapping, Sprite coverImage = null)
+        private BoardItem CreateItem(PositionInt key, IReadOnlyDictionary<PositionInt, BoardItemData> itemsMapping, Sprite coverImage = null)
         {
             var item = Object.Instantiate(_cardPrefab, _gridLayout.transform);
             if (itemsMapping.TryGetValue(key, out var itemData))
@@ -82,7 +81,7 @@ namespace BoardModule
             UpdateCellSize(_columns, _rows);
         }
 
-        public void Show(Vector2Int key)
+        public void Show(PositionInt key)
         {
             if (_items.TryGetValue(key, out var item))
             {
@@ -90,7 +89,7 @@ namespace BoardModule
             }
         }
         
-        public void Hide(Vector2Int key)
+        public void Hide(PositionInt key)
         {
             if (_items.TryGetValue(key, out var item))
             {
@@ -136,7 +135,7 @@ namespace BoardModule
             _items.Clear();
         }
         
-        public void MarkAsMatched(List<Vector2Int> items)
+        public void MarkAsMatched(List<PositionInt> items)
         {
             foreach (var itemKey in items)
             {

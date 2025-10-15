@@ -17,17 +17,17 @@ namespace BoardModule
         [SerializeField] private Vector2 _spacing = new Vector2(10, 10);
 
         private readonly Queue<BoardItemData> _selectedItems = new ();
-        private readonly HashSet<Vector2Int> _selectedItemsKey = new();
+        private readonly HashSet<PositionInt> _selectedItemsKey = new();
         private IGridController _gridController;
         private ISpriteProvider _spriteProvider;
-        private IReadOnlyDictionary<Vector2Int, BoardItemData> _items;
+        private IReadOnlyDictionary<PositionInt, BoardItemData> _items;
         private bool _isMatchCoroutineRunning;
 
         public Action OnItemClicked;
-        public Action<List<Vector2Int>> OnItemsMatch;
+        public Action<List<PositionInt>> OnItemsMatch;
         public Action OnMatchFail;
         
-        public void Initialize(int columns, int rows, IReadOnlyDictionary<Vector2Int, BoardItemData> itemsMapping, ISpriteProvider spriteProvider)
+        public void Initialize(int columns, int rows, IReadOnlyDictionary<PositionInt, BoardItemData> itemsMapping, ISpriteProvider spriteProvider)
         {
             _items = itemsMapping;
             _spriteProvider = spriteProvider;
@@ -51,7 +51,7 @@ namespace BoardModule
             _gridController.HideAll();
         }
 
-        private void OnItemSelected(Vector2Int key)
+        private void OnItemSelected(PositionInt key)
         {
             if (!_selectedItemsKey.Add(key))
             {
@@ -83,7 +83,7 @@ namespace BoardModule
                     _selectedItemsKey.Remove(item2.Position);
                     if (item1.Type == item2.Type)
                     {
-                        List<Vector2Int> matchedItems = new List<Vector2Int> { item1.Position, item2.Position };
+                        List<PositionInt> matchedItems = new List<PositionInt> { item1.Position, item2.Position };
                         yield return new WaitForSeconds(0.1f);
                         MarkAsMatched(matchedItems);
                     }
@@ -98,7 +98,7 @@ namespace BoardModule
             _isMatchCoroutineRunning = false;
         }
 
-        private void MarkAsMatched(List<Vector2Int> items)
+        private void MarkAsMatched(List<PositionInt> items)
         {
             foreach (var key in items)
             {

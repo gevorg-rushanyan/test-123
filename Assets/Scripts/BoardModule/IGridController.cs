@@ -9,16 +9,16 @@ namespace BoardModule
 {
     public interface IGridController
     {
-        public void GenerateGrid(int columns, int rows, IReadOnlyDictionary<Vector2Int, BoardItemData> itemsMapping,
+        public void GenerateGrid(int columns, int rows, IReadOnlyDictionary<PositionInt, BoardItemData> itemsMapping,
             string coverImageName, ISpriteProvider spriteProvider);
         IEnumerator UpdateGridSizeCoroutine();
 
-        void Show(Vector2Int key);
-        void Hide(Vector2Int key);
+        void Show(PositionInt key);
+        void Hide(PositionInt key);
         void ShowAll();
         void HideAll();
-        void MarkAsMatched(List<Vector2Int> items);
+        void MarkAsMatched(List<PositionInt> items);
         
-        Action<Vector2Int> OnItemSelected { get; set; }
+        Action<PositionInt> OnItemSelected { get; set; }
     }
 }

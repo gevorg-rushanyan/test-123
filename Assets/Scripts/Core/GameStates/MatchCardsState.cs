@@ -75,7 +75,7 @@ namespace Core.GameStates
             _matchCardsController.UpdateProgress(_progressService.Matches, _progressService.Turns, _progressService.Score, _scoreMultiplier);
         }
 
-        private void OnMatched(List<Vector2Int> matchItems)
+        private void OnMatched(List<PositionInt> matchItems)
         {
             ++_continuesMatchCount;
             _scoreMultiplier = GetScoreMultiplier(_continuesMatchCount);

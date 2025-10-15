@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
+using Board;
 
 namespace Core.Progress
 {
@@ -11,6 +11,6 @@ namespace Core.Progress
         public int Score { get; set; }
         public int Matches { get; set; }
         public int Turns { get; set; }
-        public List<Vector2Int> MatchItems = new ();
+        public List<PositionInt> MatchItems = new ();
     }
 }

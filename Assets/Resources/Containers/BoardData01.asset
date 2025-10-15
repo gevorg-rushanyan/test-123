@@ -17,35 +17,67 @@ MonoBehaviour:
   _targetMatchCount: 8
   _maxTurnCount: 12
   _items:
-  - _position: {x: 0, y: 0}
+  - _position:
+      _x: 0
+      _y: 0
     _type: 1
-  - _position: {x: 0, y: 1}
+  - _position:
+      _x: 0
+      _y: 1
     _type: 2
-  - _position: {x: 0, y: 2}
+  - _position:
+      _x: 0
+      _y: 2
     _type: 2
-  - _position: {x: 0, y: 3}
+  - _position:
+      _x: 0
+      _y: 3
     _type: 3
-  - _position: {x: 1, y: 0}
+  - _position:
+      _x: 1
+      _y: 0
     _type: 3
-  - _position: {x: 1, y: 1}
+  - _position:
+      _x: 1
+      _y: 1
     _type: 4
-  - _position: {x: 1, y: 2}
+  - _position:
+      _x: 1
+      _y: 2
     _type: 5
-  - _position: {x: 1, y: 3}
+  - _position:
+      _x: 1
+      _y: 3
     _type: 3
-  - _position: {x: 2, y: 0}
+  - _position:
+      _x: 2
+      _y: 0
     _type: 1
-  - _position: {x: 2, y: 1}
+  - _position:
+      _x: 2
+      _y: 1
     _type: 3
-  - _position: {x: 2, y: 2}
+  - _position:
+      _x: 2
+      _y: 2
     _type: 6
-  - _position: {x: 2, y: 3}
+  - _position:
+      _x: 2
+      _y: 3
     _type: 1
-  - _position: {x: 3, y: 0}
+  - _position:
+      _x: 3
+      _y: 0
     _type: 1
-  - _position: {x: 3, y: 1}
+  - _position:
+      _x: 3
+      _y: 1
     _type: 4
-  - _position: {x: 3, y: 2}
+  - _position:
+      _x: 3
+      _y: 2
     _type: 6
-  - _position: {x: 3, y: 3}
+  - _position:
+      _x: 3
+      _y: 3
     _type: 5

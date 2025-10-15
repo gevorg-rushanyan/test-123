@@ -18,14 +18,14 @@ namespace Core.Progress
         public int Turns => _playerProgress.Turns;
         public int Matches => _playerProgress.Matches;
         public int Score => _playerProgress.Score;
-        public IReadOnlyList<Vector2Int> MatchItems => _playerProgress.MatchItems;
+        public IReadOnlyList<PositionInt> MatchItems => _playerProgress.MatchItems;
 
         public void Initialize()
         {
             _playerProgress = LoadProgress();
         }
         
-        public void AddMatchItems(List<Vector2Int> items)
+        public void AddMatchItems(List<PositionInt> items)
         {
             _isModified = true;
             foreach (var item in items)

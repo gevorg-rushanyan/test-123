@@ -10,12 +10,12 @@ namespace BoardModule
         [SerializeField] private Image _coverImage;
         [SerializeField] private Image _itemImage;
         [SerializeField] private Button _button;
-        private Vector2Int _key;
+        private PositionInt _key;
         private ItemType _type;
         
-        public Action<Vector2Int> OnClick;
+        public Action<PositionInt> OnClick;
         
-        public void Initialize(ItemType type, Vector2Int key, Sprite itemImage, Sprite coverImage)
+        public void Initialize(ItemType type, PositionInt key, Sprite itemImage, Sprite coverImage)
         {
             _type = type;
             if (_type == ItemType.None)

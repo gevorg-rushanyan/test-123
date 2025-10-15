@@ -18,9 +18,9 @@ namespace Board
         public int MaxTurnCount => _maxTurnCount;
         public IReadOnlyList<BoardItemData> Items => _items;
 
-        public Dictionary<Vector2Int, BoardItemData> GetMapping()
+        public Dictionary<PositionInt, BoardItemData> GetMapping()
         {
-            var map = new Dictionary<Vector2Int, BoardItemData>();
+            var map = new Dictionary<PositionInt, BoardItemData>();
             if (_items == null || _items.Count == 0)
             {
                 return map;
