@@ -40,8 +40,6 @@ namespace BoardModule
 
         private void OnClicked()
         {
-            _itemImage.gameObject.SetActive(true);
-            _coverImage.gameObject.SetActive(false);
             OnClick?.Invoke(_key);
         }
 
@@ -65,6 +63,13 @@ namespace BoardModule
             
             _itemImage.gameObject.SetActive(false);
             _coverImage.gameObject.SetActive(true);
+        }
+
+        public void Matched()
+        {
+            _type = ItemType.None;
+            _itemImage.gameObject.SetActive(false);
+            _coverImage.gameObject.SetActive(false);
         }
     }
 }

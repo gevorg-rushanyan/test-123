@@ -1,13 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Board;
 using Providers;
 using UnityEngine;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace BoardModule
 {
-    public class GridController
+    public class GridController : IGridController
     {
         private readonly Dictionary<Vector2Int, BoardItem> _items;
         private RectTransform _container;
@@ -17,6 +19,8 @@ namespace BoardModule
         private ISpriteProvider _spriteProvider;
         private int _columns;
         private int _rows;
+        
+        public Action<Vector2Int> OnItemSelected { get; set; }
 
         public GridController(RectTransform container, GridLayoutGroup gridLayout, BoardItem cardPrefab, Vector2 spacing)
         {
@@ -67,7 +71,7 @@ namespace BoardModule
                 item.Initialize();
             }
             item.gameObject.SetActive(true);
-            item.OnClick += OnItemClicked;
+            item.OnClick += selectedItemKey => { OnItemSelected?.Invoke(selectedItemKey); };
 
             return item;
         }
@@ -78,6 +82,22 @@ namespace BoardModule
             UpdateCellSize(_columns, _rows);
         }
 
+        public void Show(Vector2Int key)
+        {
+            if (_items.TryGetValue(key, out var item))
+            {
+                item.Show();
+            }
+        }
+        
+        public void Hide(Vector2Int key)
+        {
+            if (_items.TryGetValue(key, out var item))
+            {
+                item.Hide();
+            }
+        }
+
         public void ShowAll()
         {
             foreach (var itemData in _items.Values)
@@ -85,7 +105,7 @@ namespace BoardModule
                 itemData.Show();
             }
         }
-
+        
         public void HideAll()
         {
             foreach (var itemData in _items.Values)
@@ -116,8 +136,15 @@ namespace BoardModule
             _items.Clear();
         }
         
-        private void OnItemClicked(Vector2Int key)
+        public void MarkAsMatched(List<Vector2Int> items)
         {
+            foreach (var itemKey in items)
+            {
+                if (_items.TryGetValue(itemKey, out var item))
+                {
+                    item.Matched();
+                }
+            }
         }
     }
 }

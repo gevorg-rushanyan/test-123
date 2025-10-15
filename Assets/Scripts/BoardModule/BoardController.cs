@@ -15,26 +15,104 @@ namespace BoardModule
         [SerializeField] private BoardItem _cardPrefab;
         [SerializeField] private Vector2 _spacing = new Vector2(10, 10);
 
-        private GridController _gridController;
+        private readonly Queue<BoardItemData> _selectedItems = new ();
+        private readonly HashSet<Vector2Int> _selectedItemsKey = new();
+        private IGridController _gridController;
         private ISpriteProvider _spriteProvider;
+        private IReadOnlyDictionary<Vector2Int, BoardItemData> _items;
+        private bool _isMatchCoroutineRunning;
 
         public void Initialize(int columns, int rows, IReadOnlyDictionary<Vector2Int, BoardItemData> itemsMapping, ISpriteProvider spriteProvider)
         {
+            _items = itemsMapping;
             _spriteProvider = spriteProvider;
+            _selectedItems.Clear();
+            _selectedItemsKey.Clear();
             if (_gridController == null)
             {
                 _gridController = new GridController(_container, _gridLayout, _cardPrefab, _spacing);
             }
             _gridController.GenerateGrid(columns, rows, itemsMapping, DefaultCoverImageName, _spriteProvider);
+            _gridController.OnItemSelected += OnItemSelected;
             StartCoroutine(_gridController.UpdateGridSizeCoroutine());
             StartCoroutine(PlayStartAnimation());
+            
         }
 
         private IEnumerator PlayStartAnimation()
         {
             _gridController.ShowAll();
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(1.2f);
             _gridController.HideAll();
+        }
+
+        private void OnItemSelected(Vector2Int key)
+        {
+            if (!_selectedItemsKey.Add(key))
+            {
+                return;
+            }
+
+            var selectedItem = _items[key];
+            _selectedItems.Enqueue(selectedItem);
+            _gridController.Show(key);
+
+            if (_selectedItems.Count > 1 && !_isMatchCoroutineRunning)
+            {
+                StartCoroutine(MatchLogicCoroutine());
+            }
+        }
+
+        private IEnumerator MatchLogicCoroutine()
+        {
+            _isMatchCoroutineRunning = true;
+            while (_selectedItems.Count >= 2)
+            {
+                yield return new WaitForSeconds(0.4f);
+                List<List<Vector2Int>> allMatches = new List<List<Vector2Int>>();
+                while (_selectedItems.Count >= 2)
+                {
+                    var item1 = _selectedItems.Dequeue();
+                    var item2 = _selectedItems.Dequeue();
+                    _selectedItemsKey.Remove(item1.Position);
+                    _selectedItemsKey.Remove(item2.Position);
+                    if (item1.Type == item2.Type)
+                    {
+                        List<Vector2Int> matchedItems = new List<Vector2Int> { item1.Position, item2.Position };
+                        allMatches.Add(matchedItems);
+                        
+                        // int index = 0;
+                        // while (_selectedItems.Count > 0)
+                        // {
+                        //     var nextItem = _selectedItems.ElementAt(index);
+                        //     if (nextItem.Type == item1.Type)
+                        //     {
+                        //         matchedItems.Add(_selectedItems.Dequeue());
+                        //         ++index;
+                        //     }
+                        //     else
+                        //     {
+                        //         break;
+                        //     }
+                        // }
+                    }
+                    else
+                    {
+                        _gridController.Hide(item1.Position);
+                        _gridController.Hide(item2.Position);
+                        Debug.Log("Not Matched");
+                    }
+                }
+
+                foreach (var match in allMatches)
+                {
+                    yield return new WaitForSeconds(0.1f);
+                    Debug.Log($"Match: {match.Count}");
+                    _gridController.MarkAsMatched(match);
+                }
+
+            }
+            _isMatchCoroutineRunning = false;
         }
     }
 }
