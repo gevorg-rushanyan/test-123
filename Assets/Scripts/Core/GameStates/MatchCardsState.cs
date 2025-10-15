@@ -38,7 +38,7 @@ namespace Core.GameStates
             if (_progressService.Columns == 0 || _progressService.Rows == 0)
             {
                 var data = _boardConfigProvider.GetBoardConfig(level);
-                _progressService.SetBoardData(data.Columns, data.Rows, data.GetMapping());
+                _progressService.InitializeProgress(data.Columns, data.Rows, data.GetMapping());
             }
             
             int columns = _progressService.Columns;
@@ -48,12 +48,19 @@ namespace Core.GameStates
             _matchCardsController = _uiManager.ShowView<MatchCardsController>(ViewType.MatchCards);
             _matchCardsController.BoardController.Initialize(columns, rows, items, _spriteProvider);
             _matchCardsController.BoardController.OnItemsMatch += OnMatched;
+            _matchCardsController.BoardController.OnMatchFail += OnMatchFail;
             _matchCardsController.OnClickBack += OnClickBack;
         }
 
         private void OnMatched(List<Vector2Int> matchItems)
         {
             _progressService.UpdateBoardItemsType(matchItems, ItemType.None);
+            _progressService.UpdateTurnsAndMatches(1, 1);
+        }
+
+        private void OnMatchFail()
+        {
+            _progressService.UpdateTurnsAndMatches(1, 0);
         }
 
         public void End()

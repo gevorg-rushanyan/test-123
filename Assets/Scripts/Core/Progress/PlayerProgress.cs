@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Board;
-using UnityEngine;
 
 namespace Core.Progress
 {
@@ -18,6 +17,8 @@ namespace Core.Progress
     {
         public int Level { get; set; }
         public int Score { get; set; }
+        public int Matches { get; set; }
+        public int Turns { get; set; }
         public BoardProgress Board { get; set; } = new ();
     }
 }

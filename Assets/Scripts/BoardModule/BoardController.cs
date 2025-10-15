@@ -24,6 +24,7 @@ namespace BoardModule
         private bool _isMatchCoroutineRunning;
 
         public Action<List<Vector2Int>> OnItemsMatch;
+        public Action OnMatchFail;
         
         public void Initialize(int columns, int rows, IReadOnlyDictionary<Vector2Int, BoardItemData> itemsMapping, ISpriteProvider spriteProvider)
         {
@@ -88,6 +89,7 @@ namespace BoardModule
                     {
                         _gridController.Hide(item1.Position);
                         _gridController.Hide(item2.Position);
+                        OnMatchFail?.Invoke();
                     }
                 }
             }

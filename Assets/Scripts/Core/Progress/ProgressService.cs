@@ -26,6 +26,9 @@ namespace Core.Progress
             set => _playerProgress.Score = value;
         }
 
+        public int Turns => _playerProgress.Turns;
+        public int Matches => _playerProgress.Matches;
+
         public int Columns
         {
             get => _playerProgress.Board.Columns;
@@ -58,6 +61,7 @@ namespace Core.Progress
 
         public void SetBoardItems(Dictionary<Vector2Int, BoardItemData> boardItems)
         {
+            _playerProgress.Board.Items.Clear();
             foreach (var item in boardItems)
             {
                 var key = KeyToString(item.Key);
@@ -78,12 +82,28 @@ namespace Core.Progress
             SaveProgress();
         }
 
-        public void SetBoardData(int columns, int rows, Dictionary<Vector2Int, BoardItemData> board)
+        public void UpdateTurnsAndMatches(int turnsDelta, int matchesDelta)
+        {
+            if (turnsDelta > 0)
+            {
+                _playerProgress.Turns += turnsDelta;
+            }
+
+            if (matchesDelta > 0)
+            {
+                _playerProgress.Matches += matchesDelta;
+            }
+        }
+
+        public void InitializeProgress(int columns, int rows, Dictionary<Vector2Int, BoardItemData> board)
         {
             if (_playerProgress.Board == null)
             {
                 _playerProgress.Board = new BoardProgress();
             }
+
+            _playerProgress.Turns = 0;
+            _playerProgress.Matches = 0;
             _playerProgress.Board.Columns = columns;
             _playerProgress.Board.Rows = rows;
             
