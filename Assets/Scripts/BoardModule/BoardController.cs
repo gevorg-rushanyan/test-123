@@ -68,8 +68,7 @@ namespace BoardModule
             _isMatchCoroutineRunning = true;
             while (_selectedItems.Count >= 2)
             {
-                yield return new WaitForSeconds(0.4f);
-                List<List<Vector2Int>> allMatches = new List<List<Vector2Int>>();
+                yield return new WaitForSeconds(0.6f);
                 while (_selectedItems.Count >= 2)
                 {
                     var item1 = _selectedItems.Dequeue();
@@ -79,22 +78,8 @@ namespace BoardModule
                     if (item1.Type == item2.Type)
                     {
                         List<Vector2Int> matchedItems = new List<Vector2Int> { item1.Position, item2.Position };
-                        allMatches.Add(matchedItems);
-                        
-                        // int index = 0;
-                        // while (_selectedItems.Count > 0)
-                        // {
-                        //     var nextItem = _selectedItems.ElementAt(index);
-                        //     if (nextItem.Type == item1.Type)
-                        //     {
-                        //         matchedItems.Add(_selectedItems.Dequeue());
-                        //         ++index;
-                        //     }
-                        //     else
-                        //     {
-                        //         break;
-                        //     }
-                        // }
+                        yield return new WaitForSeconds(0.1f);
+                        _gridController.MarkAsMatched(matchedItems);
                     }
                     else
                     {
@@ -103,14 +88,6 @@ namespace BoardModule
                         Debug.Log("Not Matched");
                     }
                 }
-
-                foreach (var match in allMatches)
-                {
-                    yield return new WaitForSeconds(0.1f);
-                    Debug.Log($"Match: {match.Count}");
-                    _gridController.MarkAsMatched(match);
-                }
-
             }
             _isMatchCoroutineRunning = false;
         }
