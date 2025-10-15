@@ -19,5 +19,7 @@ namespace Core.Progress
         void SetBoardItems(Dictionary<Vector2Int, BoardItemData> boardItems);
         void UpdateBoardItemsType(List<Vector2Int> boardItems, ItemType targetType);
         void UpdateTurnsAndMatches(int turnsDelta, int matchesDelta);
+
+        void SaveProgress();
     }
 }

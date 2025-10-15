@@ -13,17 +13,26 @@ namespace Core.Progress
         private const string FileName = "progress.json";
         private const char KeySeparator = '-';
         private PlayerProgress _playerProgress;
+        private bool _isModified;
 
         public int Level
         {
             get => _playerProgress.Level;
-            set => _playerProgress.Level = value;
+            set
+            {
+                _playerProgress.Level = value;
+                _isModified = true;
+            }
         }
 
         public int Score
         {
             get => _playerProgress.Score;
-            set => _playerProgress.Score = value;
+            set
+            {
+                _playerProgress.Score = value;
+                _isModified = true;
+            }
         }
 
         public int Turns => _playerProgress.Turns;
@@ -32,13 +41,21 @@ namespace Core.Progress
         public int Columns
         {
             get => _playerProgress.Board.Columns;
-            set => _playerProgress.Board.Columns = value;
+            set
+            {
+                _playerProgress.Board.Columns = value;
+                _isModified = true;
+            }
         }
 
         public int Rows
         {
-            get => _playerProgress.Board.Rows; 
-            set => _playerProgress.Board.Rows = value;
+            get => _playerProgress.Board.Rows;
+            set
+            {
+                _playerProgress.Board.Rows = value;
+                _isModified = true;
+            }
         }
         
         public void Initialize()
@@ -61,6 +78,7 @@ namespace Core.Progress
 
         public void SetBoardItems(Dictionary<Vector2Int, BoardItemData> boardItems)
         {
+            _isModified = true;
             _playerProgress.Board.Items.Clear();
             foreach (var item in boardItems)
             {
@@ -71,6 +89,7 @@ namespace Core.Progress
         
         public void UpdateBoardItemsType(List<Vector2Int> items, ItemType targetType)
         {
+            _isModified = true;
             foreach (var item in items)
             {
                 var key = KeyToString(item);
@@ -79,7 +98,6 @@ namespace Core.Progress
                     _playerProgress.Board.Items[key] = targetType;
                 }
             }
-            SaveProgress();
         }
 
         public void UpdateTurnsAndMatches(int turnsDelta, int matchesDelta)
@@ -87,11 +105,13 @@ namespace Core.Progress
             if (turnsDelta > 0)
             {
                 _playerProgress.Turns += turnsDelta;
+                _isModified = true;
             }
 
             if (matchesDelta > 0)
             {
                 _playerProgress.Matches += matchesDelta;
+                _isModified = true;
             }
         }
 
@@ -108,12 +128,12 @@ namespace Core.Progress
             _playerProgress.Board.Rows = rows;
             
             SetBoardItems(board);
-            SaveProgress();
+            _isModified = true;
         }
 
-        private void SaveProgress()
+        public void SaveProgress()
         {
-            if (_playerProgress == null)
+            if (_playerProgress == null || !_isModified)
             {
                 return;
             }
@@ -123,6 +143,7 @@ namespace Core.Progress
                 var json = JsonConvert.SerializeObject(_playerProgress);
                 var path = Path.Combine(Application.persistentDataPath, FileName);
                 File.WriteAllText(path, json, Encoding.UTF8);
+                _isModified = false;
             }
             catch (Exception e)
             {

@@ -40,5 +40,10 @@ namespace Core
             
             _uiManager.SetLoadingState(false);
         }
+
+        private void OnDestroy()
+        {
+            _progressService.SaveProgress();
+        }
     }
 }

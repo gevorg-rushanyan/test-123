@@ -8,6 +8,7 @@ namespace UI.MatchCards
     {
         private MatchCardsView _viewPrefab;
         private BoardController _boardController;
+        private MatchCardsView _view;
         
         public Action OnClickBack;
         public BoardController BoardController => _boardController;
@@ -19,9 +20,14 @@ namespace UI.MatchCards
 
         public override void Show()
         {
-            var view = base.Show(_viewPrefab);
-            _boardController = view.BoardController;
-            view.OnClickBack += () => { OnClickBack?.Invoke(); };
+            _view = base.Show(_viewPrefab);
+            _boardController = _view.BoardController;
+            _view.OnClickBack += () => { OnClickBack?.Invoke(); };
+        }
+
+        public void UpdateProgress(int matches, int turns)
+        {
+            _view.UpdateProgress(matches, turns);
         }
     }
 }
