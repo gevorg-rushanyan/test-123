@@ -44,9 +44,12 @@ namespace Core
             _uiManager.SetLoadingState(false);
         }
 
-        private void OnDestroy()
+        private void OnApplicationPause(bool pauseStatus)
         {
-            _progressService.SaveProgress();
+            if (pauseStatus)
+            {
+                _progressService.SaveProgress();
+            }
         }
     }
 }

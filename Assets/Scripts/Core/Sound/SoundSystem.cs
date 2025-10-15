@@ -12,7 +12,6 @@ namespace Core.Sound
         private ISoundsProvider _soundsProvider;
         private Queue<AudioSource> _audioSourcePool;
         private LinkedList<AudioSource> _activeAudioSources;
-        private Coroutine _releaseFinishedSoundsCoroutine;
 
         public void Initialize(ISoundsProvider soundsProvider)
         {
@@ -26,7 +25,7 @@ namespace Core.Sound
                 _audioSourcePool.Enqueue(audioSource);
             }
 
-            _releaseFinishedSoundsCoroutine = StartCoroutine(ReleaseFinishedSoundsCoroutine());
+            StartCoroutine(ReleaseFinishedSoundsCoroutine());
         }
 
         private IEnumerator ReleaseFinishedSoundsCoroutine()
