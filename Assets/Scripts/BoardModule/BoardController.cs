@@ -16,16 +16,16 @@ namespace BoardModule
         [SerializeField] private Vector2 _spacing = new Vector2(10, 10);
 
         private GridController _gridController;
-        private ICommonResourceProvider _resourceProvider;
+        private ISpriteProvider _spriteProvider;
 
-        public void Initialize(int columns, int rows, IReadOnlyDictionary<Vector2Int, BoardItemData> itemsMapping, ICommonResourceProvider commonResourceProvider)
+        public void Initialize(int columns, int rows, IReadOnlyDictionary<Vector2Int, BoardItemData> itemsMapping, ISpriteProvider spriteProvider)
         {
-            _resourceProvider = commonResourceProvider;
+            _spriteProvider = spriteProvider;
             if (_gridController == null)
             {
                 _gridController = new GridController(_container, _gridLayout, _cardPrefab, _spacing);
             }
-            _gridController.GenerateGrid(columns, rows, itemsMapping, DefaultCoverImageName, _resourceProvider);
+            _gridController.GenerateGrid(columns, rows, itemsMapping, DefaultCoverImageName, _spriteProvider);
             StartCoroutine(_gridController.UpdateGridSizeCoroutine());
             StartCoroutine(PlayStartAnimation());
         }

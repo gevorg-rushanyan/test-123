@@ -9,7 +9,7 @@ namespace Core.GameStates
     {
         private readonly IUiManager _uiManager;
         private readonly IBoardConfigProvider _boardConfigProvider;
-        private readonly ICommonResourceProvider _resourceProvider;
+        private readonly ISpriteProvider _spriteProvider;
         private MatchCardsController _matchCardsController;
         
         public Action OnBackSelected;
@@ -17,11 +17,11 @@ namespace Core.GameStates
         public MatchCardsState(
             IUiManager uiManager,
             IBoardConfigProvider boardConfigProvider,
-            ICommonResourceProvider resourceProvider)
+            ISpriteProvider spriteProvider)
         {
             _uiManager = uiManager;
             _boardConfigProvider = boardConfigProvider;
-            _resourceProvider = resourceProvider;
+            _spriteProvider = spriteProvider;
         }
 
         public void Start()
@@ -32,7 +32,7 @@ namespace Core.GameStates
             var mapping = data.GetMapping();
             
             _matchCardsController = _uiManager.ShowView<MatchCardsController>(ViewType.MatchCards);
-            _matchCardsController.BoardController.Initialize(columns, rows, mapping, _resourceProvider);
+            _matchCardsController.BoardController.Initialize(columns, rows, mapping, _spriteProvider);
             _matchCardsController.OnClickBack += OnClickBack;
         }
 

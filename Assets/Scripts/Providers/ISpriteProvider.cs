@@ -3,9 +3,8 @@ using UnityEngine;
 
 namespace Providers
 {
-    public interface ICommonResourceProvider
+    public interface ISpriteProvider
     {
-        void Initialize();
         bool TryGetBoardItemSprite(ItemType type, out Sprite sprite);
         Sprite GetSprite(string name);
     }

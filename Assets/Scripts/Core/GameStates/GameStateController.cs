@@ -7,17 +7,17 @@ namespace Core.GameStates
     {
         private readonly IUiManager _uiManager;
         private readonly IBoardConfigProvider _boardConfigProvider;
-        private readonly ICommonResourceProvider _resourceProvider;
+        private readonly ISpriteProvider _spriteProvider;
         private IGameState _gameState;
 
         public GameStateController(
             IUiManager uiManager,
             IBoardConfigProvider boardConfigProvider,
-            ICommonResourceProvider resourceProvider)
+            ISpriteProvider spriteProvider)
         {
             _uiManager = uiManager;
             _boardConfigProvider = boardConfigProvider;
-            _resourceProvider = resourceProvider;
+            _spriteProvider = spriteProvider;
         }
 
         public void SetState(GameState state)
@@ -45,7 +45,7 @@ namespace Core.GameStates
         private void StartCardMatchState()
         {
             _gameState?.End();
-            var matchCardsState = new MatchCardsState(_uiManager, _boardConfigProvider, _resourceProvider);
+            var matchCardsState = new MatchCardsState(_uiManager, _boardConfigProvider, _spriteProvider);
             matchCardsState.OnBackSelected += StartMainMenuState;
             _gameState = matchCardsState;
             _gameState.Start();

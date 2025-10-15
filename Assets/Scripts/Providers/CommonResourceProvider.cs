@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Providers
 {
-    public class CommonResourceProvider : ICommonResourceProvider
+    public class CommonResourceProvider : ISpriteProvider
     {
         private const string Path = "Containers/CommonResourceContainer";
         private CommonResourceContainer _commonResourceContainer;

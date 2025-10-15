@@ -14,7 +14,7 @@ namespace BoardModule
         private GridLayoutGroup _gridLayout;
         private BoardItem _cardPrefab;
         private Vector2 _spacing;
-        private ICommonResourceProvider _resourceProvider;
+        private ISpriteProvider _spriteProvider;
         private int _columns;
         private int _rows;
 
@@ -29,16 +29,16 @@ namespace BoardModule
             
         }
 
-        public void GenerateGrid(int columns, int rows, IReadOnlyDictionary<Vector2Int, BoardItemData> itemsMapping, string coverImageName, ICommonResourceProvider resourceProvider)
+        public void GenerateGrid(int columns, int rows, IReadOnlyDictionary<Vector2Int, BoardItemData> itemsMapping, string coverImageName, ISpriteProvider spriteProvider)
         {
             _columns = columns;
             _rows = rows;
-            _resourceProvider = resourceProvider;
+            _spriteProvider = spriteProvider;
             DeleteItems();
 
             _gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
             _gridLayout.constraintCount = columns;
-            var coverImage = _resourceProvider.GetSprite(coverImageName);
+            var coverImage = _spriteProvider.GetSprite(coverImageName);
 
             for (int i = 0; i < columns; ++i)
             {
@@ -59,7 +59,7 @@ namespace BoardModule
             var item = Object.Instantiate(_cardPrefab, _gridLayout.transform);
             if (itemsMapping.TryGetValue(key, out var itemData))
             {
-                _resourceProvider.TryGetBoardItemSprite(itemData.Type, out Sprite sprite);
+                _spriteProvider.TryGetBoardItemSprite(itemData.Type, out Sprite sprite);
                 item.Initialize(itemData.Type, key, sprite, coverImage);
             }
             else

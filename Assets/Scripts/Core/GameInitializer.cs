@@ -11,7 +11,7 @@ namespace Core
         private GameStateController _gameStateController;
         private IViewProvider _viewProvider;
         private IBoardConfigProvider _boardConfigProvider;
-        private ICommonResourceProvider _resourceProvider;
+        private CommonResourceProvider _resourceProvider;
         
         private void Start()
         {
