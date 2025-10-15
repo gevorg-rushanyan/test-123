@@ -94,7 +94,6 @@ namespace Core.GameStates
         private void OnMatchFail()
         {
             _continuesMatchCount = 0;
-            // _soundSystem.PlaySound(SoundType.);
             _scoreMultiplier = GetScoreMultiplier(_continuesMatchCount);
             _progressService.UpdateTurnsAndMatches(1, 0, 0);
             _matchCardsController.UpdateProgress(_progressService.Matches, _progressService.Turns, _progressService.Score, _scoreMultiplier);
@@ -146,7 +145,6 @@ namespace Core.GameStates
             }
             
             return multiplier;
-            
         }
     }
 }

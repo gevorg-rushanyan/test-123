@@ -12,7 +12,7 @@ namespace UI.MatchCards
         
         public Action OnClickBack;
         public Action OnWinOrLoseClick;
-        public BoardController BoardController => _boardController;
+        public IBoardController BoardController => _boardController;
         
         public MatchCardsController(MatchCardsView viewPrefab, Transform root) : base(root)
         {

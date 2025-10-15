@@ -51,5 +51,10 @@ namespace Core
                 _progressService.SaveProgress();
             }
         }
+
+        private void OnDestroy()
+        {
+            _progressService.SaveProgress();
+        }
     }
 }

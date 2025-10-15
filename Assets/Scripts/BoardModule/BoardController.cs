@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace BoardModule
 {
-    public class BoardController : MonoBehaviour
+    public class BoardController : MonoBehaviour, IBoardController
     {
         private const string DefaultCoverImageName = "Cover";
         [SerializeField] private RectTransform _container;
@@ -23,9 +23,9 @@ namespace BoardModule
         private IReadOnlyDictionary<PositionInt, BoardItemData> _items;
         private bool _isMatchCoroutineRunning;
 
-        public Action OnItemClicked;
-        public Action<List<PositionInt>> OnItemsMatch;
-        public Action OnMatchFail;
+        public Action OnItemClicked { get; set; }
+        public Action<List<PositionInt>> OnItemsMatch { get; set; }
+        public Action OnMatchFail { get; set; }
         
         public void Initialize(int columns, int rows, IReadOnlyDictionary<PositionInt, BoardItemData> itemsMapping, ISpriteProvider spriteProvider)
         {
