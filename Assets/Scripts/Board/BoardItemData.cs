@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Board
 {
     [Serializable]
-    public class BoardItemData
+    public struct BoardItemData
     {
         [SerializeField] private Vector2Int _position;
         [SerializeField] private ItemType _type;

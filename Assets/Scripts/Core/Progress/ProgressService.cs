@@ -14,16 +14,9 @@ namespace Core.Progress
         private PlayerProgress _playerProgress;
         private bool _isModified;
 
-        public int Level
-        {
-            get => _playerProgress.Level;
-            set
-            {
-                _playerProgress.Level = value;
-                _isModified = true;
-            }
-        }
-
+        public int Level => _playerProgress.Level;
+        public int Turns => _playerProgress.Turns;
+        public int Matches => _playerProgress.Matches;
         public int Score
         {
             get => _playerProgress.Score;
@@ -33,51 +26,11 @@ namespace Core.Progress
                 _isModified = true;
             }
         }
-
-        public int Turns => _playerProgress.Turns;
-        public int Matches => _playerProgress.Matches;
-
-        public int Columns
-        {
-            get => _playerProgress.Board.Columns;
-            set
-            {
-                _playerProgress.Board.Columns = value;
-                _isModified = true;
-            }
-        }
-
-        public int Rows
-        {
-            get => _playerProgress.Board.Rows;
-            set
-            {
-                _playerProgress.Board.Rows = value;
-                _isModified = true;
-            }
-        }
-        
-        public IReadOnlyList<Vector2Int> MatchItems => _playerProgress.Board.MatchItems;
+        public IReadOnlyList<Vector2Int> MatchItems => _playerProgress.MatchItems;
 
         public void Initialize()
         {
             _playerProgress = LoadProgress();
-        }
-        
-        public void InitializeProgress(int columns, int rows)
-        {
-            _isModified = true;
-            if (_playerProgress.Board == null)
-            {
-                _playerProgress.Board = new BoardProgress();
-                return;
-            }
-
-            _playerProgress.Turns = 0;
-            _playerProgress.Matches = 0;
-            _playerProgress.Board.Columns = columns;
-            _playerProgress.Board.Rows = rows;
-            _playerProgress.Board.MatchItems.Clear();
         }
         
         public void AddMatchItems(List<Vector2Int> items)
@@ -85,7 +38,7 @@ namespace Core.Progress
             _isModified = true;
             foreach (var item in items)
             {
-                _playerProgress.Board.MatchItems.Add(item);
+                _playerProgress.MatchItems.Add(item);
             }
         }
 
@@ -102,6 +55,20 @@ namespace Core.Progress
                 _playerProgress.Matches += matchesDelta;
                 _isModified = true;
             }
+        }
+
+        public void LevelPassed()
+        {
+            _isModified = true;
+            _playerProgress.Level += 1;
+            ResetProgress();
+        }
+
+        public void ResetProgress()
+        {
+            _playerProgress.Turns = 0;
+            _playerProgress.Matches = 0;
+            _playerProgress.MatchItems.Clear();
         }
 
         public void SaveProgress()
