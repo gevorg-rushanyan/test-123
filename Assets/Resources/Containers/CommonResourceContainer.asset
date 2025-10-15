@@ -13,3 +13,8 @@ MonoBehaviour:
   m_Name: CommonResourceContainer
   m_EditorClassIdentifier: 
   _boardAtlas: {fileID: 100100200, guid: 85fb571b735f944809e16381934d5752, type: 3}
+  _flipSound: {fileID: 8300000, guid: 7f2359b3405164b8aa6658787b3e60ff, type: 3}
+  _matchSound: {fileID: 8300000, guid: 11a38e47136014639b2448bac03123e4, type: 3}
+  _winSound: {fileID: 8300000, guid: f9da3749971794feca0ff76991da611a, type: 3}
+  _loseSound: {fileID: 8300000, guid: b608d02886124473c91f7d908fb13d2a, type: 3}
+  _audioSourcePrefab: {fileID: 4116123315296529318, guid: f00788099572747478fc25ad003e15e5, type: 3}

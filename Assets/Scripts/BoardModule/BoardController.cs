@@ -23,6 +23,7 @@ namespace BoardModule
         private IReadOnlyDictionary<Vector2Int, BoardItemData> _items;
         private bool _isMatchCoroutineRunning;
 
+        public Action OnItemClicked;
         public Action<List<Vector2Int>> OnItemsMatch;
         public Action OnMatchFail;
         
@@ -60,6 +61,7 @@ namespace BoardModule
             var selectedItem = _items[key];
             _selectedItems.Enqueue(selectedItem);
             _gridController.Show(key);
+            OnItemClicked?.Invoke();
 
             if (_selectedItems.Count > 1 && !_isMatchCoroutineRunning)
             {

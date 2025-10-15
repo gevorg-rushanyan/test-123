@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Board;
 using Containers;
 using Core.Progress;
+using Core.Sound;
 using Providers;
 using UI;
 using UI.MatchCards;
@@ -16,6 +17,7 @@ namespace Core.GameStates
         private readonly IUiManager _uiManager;
         private readonly IBoardConfigProvider _boardConfigProvider;
         private readonly ISpriteProvider _spriteProvider;
+        private readonly ISoundSystem _soundSystem;
         private MatchCardsController _matchCardsController;
         private int _targetMatchCount;
         private int _maxTurnCount;
@@ -29,12 +31,14 @@ namespace Core.GameStates
             IProgressService progressService,
             IUiManager uiManager,
             IBoardConfigProvider boardConfigProvider,
-            ISpriteProvider spriteProvider)
+            ISpriteProvider spriteProvider,
+            ISoundSystem soundSystem)
         {
             _progressService = progressService;
             _uiManager = uiManager;
             _boardConfigProvider = boardConfigProvider;
             _spriteProvider = spriteProvider;
+            _soundSystem = soundSystem;
         }
 
         public void Start()
@@ -61,6 +65,7 @@ namespace Core.GameStates
                 _matchCardsController = _uiManager.ShowView<MatchCardsController>(ViewType.MatchCards);
                 _matchCardsController.BoardController.OnItemsMatch += OnMatched;
                 _matchCardsController.BoardController.OnMatchFail += OnMatchFail;
+                _matchCardsController.BoardController.OnItemClicked += OnItemClicked;
                 _matchCardsController.OnClickBack += OnClickBack;
                 _matchCardsController.OnWinOrLoseClick += OnWinOrLoseClick;
             }
@@ -74,7 +79,7 @@ namespace Core.GameStates
         {
             ++_continuesMatchCount;
             _scoreMultiplier = GetScoreMultiplier(_continuesMatchCount);
-            
+            _soundSystem.PlaySound(SoundType.Match);
             _progressService.AddMatchItems(matchItems);
             _progressService.UpdateTurnsAndMatches(1, 1, 1 * _scoreMultiplier);
             _matchCardsController.UpdateProgress(_progressService.Matches, _progressService.Turns, _progressService.Score, _scoreMultiplier);
@@ -82,12 +87,14 @@ namespace Core.GameStates
             {
                 _matchCardsController.ShowWinOrLoseView(true);
                 _progressService.LevelPassed();
+                _soundSystem.PlaySound(SoundType.Win);
             }
         }
 
         private void OnMatchFail()
         {
             _continuesMatchCount = 0;
+            // _soundSystem.PlaySound(SoundType.);
             _scoreMultiplier = GetScoreMultiplier(_continuesMatchCount);
             _progressService.UpdateTurnsAndMatches(1, 0, 0);
             _matchCardsController.UpdateProgress(_progressService.Matches, _progressService.Turns, _progressService.Score, _scoreMultiplier);
@@ -95,11 +102,18 @@ namespace Core.GameStates
             {
                 _matchCardsController.ShowWinOrLoseView(false);
                 _progressService.ResetProgress();
+                _soundSystem.PlaySound(SoundType.Lose);
             }
+        }
+
+        private void OnItemClicked()
+        {
+            _soundSystem.PlaySound(SoundType.Flip);
         }
 
         public void End()
         {
+            _soundSystem.StopAllSounds();
             _progressService.SaveProgress();
             _matchCardsController.OnClickBack -= OnClickBack;
             _uiManager.HideView(_matchCardsController);
@@ -108,11 +122,13 @@ namespace Core.GameStates
         private void OnClickBack()
         {
             OnBackSelected?.Invoke();
+            _soundSystem.StopAllSounds();
         }
 
         private void OnWinOrLoseClick()
         {
             _continuesMatchCount = 0;
+            _soundSystem.StopAllSounds();
             _matchCardsController.HideWinOrLoseView();
             Start();
         }

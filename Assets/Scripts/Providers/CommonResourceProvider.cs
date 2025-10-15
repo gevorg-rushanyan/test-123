@@ -1,17 +1,28 @@
+using System.Collections.Generic;
 using Board;
 using Containers;
 using UnityEngine;
 
 namespace Providers
 {
-    public class CommonResourceProvider : ISpriteProvider
+    public class CommonResourceProvider : ISpriteProvider, ISoundsProvider
     {
         private const string Path = "Containers/CommonResourceContainer";
         private CommonResourceContainer _commonResourceContainer;
+        private Dictionary<SoundType, AudioClip> _audioClips;
+        
+        public AudioSource AudioSourcePrefab => _commonResourceContainer.AudioSourcePrefab;
         
         public void Initialize()
         {
             _commonResourceContainer = Resources.Load<CommonResourceContainer>(Path);
+            _audioClips = new Dictionary<SoundType, AudioClip>
+            {
+                {SoundType.Flip, _commonResourceContainer.FlipSound},
+                {SoundType.Match, _commonResourceContainer.MatchSound},
+                {SoundType.Win, _commonResourceContainer.WinSound},
+                {SoundType.Lose, _commonResourceContainer.LoseSound}
+            };
         }
 
         public bool TryGetBoardItemSprite(ItemType type, out Sprite sprite)
@@ -41,6 +52,11 @@ namespace Providers
                 ItemType.Warrior => "Warrior",
                 _ => string.Empty
             };
+        }
+
+        public AudioClip GetSound(SoundType type)
+        {
+            return _audioClips.GetValueOrDefault(type);
         }
     }
 }
