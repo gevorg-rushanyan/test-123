@@ -1,12 +1,17 @@
 using System;
+using System.Collections.Generic;
+using Board;
+using Core.Progress;
 using Providers;
 using UI;
 using UI.MatchCards;
+using UnityEngine;
 
 namespace Core.GameStates
 {
     public class MatchCardsState : IGameState
     {
+        private readonly IProgressService _progressService;
         private readonly IUiManager _uiManager;
         private readonly IBoardConfigProvider _boardConfigProvider;
         private readonly ISpriteProvider _spriteProvider;
@@ -15,10 +20,12 @@ namespace Core.GameStates
         public Action OnBackSelected;
         
         public MatchCardsState(
+            IProgressService progressService,
             IUiManager uiManager,
             IBoardConfigProvider boardConfigProvider,
             ISpriteProvider spriteProvider)
         {
+            _progressService = progressService;
             _uiManager = uiManager;
             _boardConfigProvider = boardConfigProvider;
             _spriteProvider = spriteProvider;
@@ -26,13 +33,20 @@ namespace Core.GameStates
 
         public void Start()
         {
-            var data = _boardConfigProvider.GetBoardConfig(0);
-            int columns = data.Columns;
-            int rows = data.Rows;
-            var mapping = data.GetMapping();
+            int level = _progressService.Level;
+            // First play
+            if (_progressService.Columns == 0 || _progressService.Rows == 0)
+            {
+                var data = _boardConfigProvider.GetBoardConfig(level);
+                _progressService.UpdateBoardData(data.Columns, data.Rows, data.GetMapping());
+            }
+            
+            int columns = _progressService.Columns;
+            int rows = _progressService.Rows;
+            var items = _progressService.GetBoardItems();
             
             _matchCardsController = _uiManager.ShowView<MatchCardsController>(ViewType.MatchCards);
-            _matchCardsController.BoardController.Initialize(columns, rows, mapping, _spriteProvider);
+            _matchCardsController.BoardController.Initialize(columns, rows, items, _spriteProvider);
             _matchCardsController.OnClickBack += OnClickBack;
         }
 

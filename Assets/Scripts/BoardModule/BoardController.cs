@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Board;
@@ -22,6 +23,8 @@ namespace BoardModule
         private IReadOnlyDictionary<Vector2Int, BoardItemData> _items;
         private bool _isMatchCoroutineRunning;
 
+        public Action Trigger;
+        
         public void Initialize(int columns, int rows, IReadOnlyDictionary<Vector2Int, BoardItemData> itemsMapping, ISpriteProvider spriteProvider)
         {
             _items = itemsMapping;
@@ -79,17 +82,29 @@ namespace BoardModule
                     {
                         List<Vector2Int> matchedItems = new List<Vector2Int> { item1.Position, item2.Position };
                         yield return new WaitForSeconds(0.1f);
-                        _gridController.MarkAsMatched(matchedItems);
+                        MarkAsMatched(matchedItems);
                     }
                     else
                     {
                         _gridController.Hide(item1.Position);
                         _gridController.Hide(item2.Position);
-                        Debug.Log("Not Matched");
                     }
                 }
             }
             _isMatchCoroutineRunning = false;
+        }
+
+        private void MarkAsMatched(List<Vector2Int> items)
+        {
+            foreach (var key in items)
+            {
+                if (_items.TryGetValue(key, out var item))
+                {
+                    item.Type = ItemType.None;
+                }
+            }
+            _gridController.MarkAsMatched(items);
+            Trigger?.Invoke();
         }
     }
 }
